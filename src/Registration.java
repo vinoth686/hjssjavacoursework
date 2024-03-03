@@ -14,16 +14,29 @@ public class Registration {
         System.out.println("Enter the name of the learner:");
         String learnerName = scanner.nextLine();
 
-        System.out.println("Enter the age of the learner:");
-        int learnerAge = scanner.nextInt();
+//        System.out.println("Enter the age of the learner:");
+//        int learnerAge = scanner.nextInt();
+//        scanner.nextLine();
+        int learnerAge;
+        do {
+            System.out.println("Enter the age of the learner:");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a valid age (between 4 and 11):");
+                scanner.next();
+            }
+            learnerAge = scanner.nextInt();
+        } while (learnerAge < 4 || learnerAge > 11);
         scanner.nextLine();
 
         System.out.println("Enter the gender of the learner (M/F):");
         char learnerGender = scanner.nextLine().charAt(0);
 
+        System.out.println("Enter your mobile phone number");
+        int learnerPhone = scanner.nextInt();
+
         int learnerId = uniqueIdCounter++;
 
-        Learner newLearner = new Learner(learnerId, learnerName, learnerAge, learnerGender);
+        Learner newLearner = new Learner(learnerId, learnerName, learnerAge, learnerGender, learnerPhone);
 
         learners.put(learnerId, String.valueOf(newLearner));
 
