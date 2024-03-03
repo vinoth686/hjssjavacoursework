@@ -25,6 +25,11 @@ public class Registration {
                 scanner.next();
             }
             learnerAge = scanner.nextInt();
+            if (learnerAge < 4) {
+                System.out.println("The entered age is below 4. The proper age to enroll is 4 to 11.");
+            } else if (learnerAge > 11) {
+                System.out.println("The entered age is above 11. The proper age to enroll is 4 to 11.");
+            }
         } while (learnerAge < 4 || learnerAge > 11);
         scanner.nextLine();
 
@@ -43,5 +48,4 @@ public class Registration {
         System.out.println("Learner registered successfully with ID: " + learnerId);
         System.out.println("Learner registered successfully with ID: " + newLearner);
     }
-
 }
