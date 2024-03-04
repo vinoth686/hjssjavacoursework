@@ -4,19 +4,29 @@ import java.util.Map;
 
 public class Registration {
     private int uniqueIdCounter = 1;
-    private final Map<Integer, String> learners = new HashMap<>();
-    public Map<Integer, String> getLearners() {
-        return learners;
+    private final Map<Integer, Learner> learners = new HashMap<>();
+
+    public Registration() {
+        addStaticLearner("Stephen", 8, 'M', 123456789);
+        addStaticLearner("Benny", 7, 'F', 987654321);
     }
-    void registerNewLearner() {
+
+    private void addStaticLearner(String name, int age, char gender, int phoneNumber) {
+        int learnerId = uniqueIdCounter++;
+        Learner staticLearner = new Learner(learnerId, name, age, gender, phoneNumber);
+        learners.put(learnerId, staticLearner);
+    }
+
+    private static boolean isValidPhoneNumber(int phoneNumber) {
+        return String.valueOf(phoneNumber).length() == 10;
+    }
+
+    public void registerNewLearner() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter the name of the learner:");
         String learnerName = scanner.nextLine();
 
-//        System.out.println("Enter the age of the learner:");
-//        int learnerAge = scanner.nextInt();
-//        scanner.nextLine();
         int learnerAge;
         do {
             System.out.println("Enter the age of the learner:");
@@ -36,16 +46,38 @@ public class Registration {
         System.out.println("Enter the gender of the learner (M/F):");
         char learnerGender = scanner.nextLine().charAt(0);
 
-        System.out.println("Enter your mobile phone number");
-        int learnerPhone = scanner.nextInt();
+//        System.out.println("Enter your mobile phone number");
+//        int learnerPhone = scanner.nextInt();
+        int learnerPhone;
+        do {
+            System.out.println("Enter your mobile phone number");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a valid mobile phone number:");
+                scanner.next();
+            }
+            learnerPhone = scanner.nextInt();
+        } while (isValidPhoneNumber(learnerPhone));
+
 
         int learnerId = uniqueIdCounter++;
 
         Learner newLearner = new Learner(learnerId, learnerName, learnerAge, learnerGender, learnerPhone);
 
-        learners.put(learnerId, String.valueOf(newLearner));
+        learners.put(learnerId, newLearner);
 
-        System.out.println("Learner registered successfully with ID: " + learnerId);
         System.out.println("Learner registered successfully with ID: " + newLearner);
+    }
+
+    public void printLearners() {
+        System.out.println("List of Registered Learners:");
+        for (Learner learner : learners.values()) {
+            System.out.println(learner);
+        }
+    }
+
+    public static void main(String[] args) {
+        Registration registration = new Registration();
+        registration.registerNewLearner();
+        registration.printLearners();
     }
 }
