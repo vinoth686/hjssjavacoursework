@@ -30,7 +30,7 @@ public class MainScreen {
             case 5:
                 Registration registrationInstance = new Registration();
                 registrationInstance.registerNewLearner();
-                registrationInstance.printLearners();
+//                registrationInstance.printLearners();
                 break;
             case 6:
                 System.out.println("jk");
