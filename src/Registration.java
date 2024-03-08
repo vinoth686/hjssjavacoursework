@@ -1,6 +1,10 @@
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
+import java.time.DateTimeException;
 
 public class Registration {
     private int uniqueIdCounter = 1;
@@ -22,11 +26,37 @@ public class Registration {
         return String.valueOf(phoneNumber).length() == 10;
     }
 
+    private static int calculateAge(LocalDate birthdate, LocalDate currentDate) {
+        int learnerAge = currentDate.getYear() - birthdate.getYear();
+        if (birthdate.getMonthValue() > currentDate.getMonthValue() ||
+                (birthdate.getMonthValue() == currentDate.getMonthValue() && birthdate.getDayOfMonth() > currentDate.getDayOfMonth())) {
+            learnerAge--;
+        }
+        return learnerAge;
+    }
+
+    private static LocalDate getValidBirthdate(Scanner scanner) {
+        LocalDate birthdate = null;
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
+            try {
+                System.out.println("Enter your birthdate (yyyy-MM-dd):");
+                String birthdateInput = scanner.nextLine();
+                birthdate = LocalDate.parse(birthdateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                isValidInput = true;
+            } catch (DateTimeException e) {
+                System.out.println("Invalid date format. Please enter the date in the format yyyy-MM-dd.");
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid date in the format yyyy-MM-dd.");
+                scanner.nextLine();
+            }
+        }
+        return birthdate;
+    }
+
     public void registerNewLearner() {
         Scanner scanner = new Scanner(System.in);
-
-//        System.out.println("Enter the name of the learner:");
-//        String learnerName = scanner.nextLine();
         String learnerName;
         while (true) {
             System.out.println("Enter the name of the learner:");
@@ -38,28 +68,39 @@ public class Registration {
                 System.out.println("Only alphabets are allowed. Please try again.");
             }
         }
+        LocalDate currentDate = LocalDate.now();
+        LocalDate birthdate = getValidBirthdate(scanner);
+        int learnerAge = calculateAge(birthdate, currentDate);
 
-        int learnerAge;
-        do {
-            System.out.println("Enter the age of the learner:");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a valid age (between 4 and 11):");
-                scanner.next();
-            }
-            learnerAge = scanner.nextInt();
-            if (learnerAge < 4) {
-                System.out.println("The entered age is below 4. The proper age to enroll is 4 to 11.");
-            } else if (learnerAge > 11) {
-                System.out.println("The entered age is above 11. The proper age to enroll is 4 to 11.");
-            }
-        } while (learnerAge < 4 || learnerAge > 11);
-        scanner.nextLine();
+        while (learnerAge < 4 || learnerAge > 11) {
+            System.out.println("Invalid age. The proper age to enroll is 4 to 11, Sorry we can't proceed.");
+            System.exit(0);
+             MainScreen timetableBookingInstance = new MainScreen();
+             timetableBookingInstance.showMenu();
+//            birthdate = getValidBirthdate(scanner);
+//            age = calculateAge(birthdate, currentDate);
+        }
 
         System.out.println("Enter the gender of the learner (M/F):");
         char learnerGender = scanner.nextLine().charAt(0);
 
         System.out.println("Enter the grade");
-        int learnerGrade = scanner.nextInt();
+        int learnerGrade = -1;
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
+            if (scanner.hasNextInt()) {
+                learnerGrade = scanner.nextInt();
+                if (learnerGrade >= 0 && learnerGrade <= 5) {
+                    isValidInput = true;
+                } else {
+                    System.out.println("Invalid grade. Please enter a grade between 0 and 4.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer grade between 0 and 4.");
+                scanner.next();
+            }
+        }
 //        System.out.println("Enter your mobile phone number");
 //        int learnerPhone = scanner.nextInt();
         int learnerPhone;
