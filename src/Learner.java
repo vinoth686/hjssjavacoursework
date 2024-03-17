@@ -15,6 +15,14 @@ public class Learner {
         this.emergencyContact = learnerPhone;
     }
 
+    public int getGrade() {
+        return grade;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "ID: " + id + ", Name: " + name + ", Age: " + age + ", Gender: " + gender + ", Grade: " + grade + ", emergencyContact: " + emergencyContact;

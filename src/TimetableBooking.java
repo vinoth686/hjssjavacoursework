@@ -1,7 +1,16 @@
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.Map;
 
 public class TimetableBooking {
+    private SwimmingClassManager classManager;
+    private Map<Integer, Learner> learners;
+
+    public TimetableBooking() {
+        this.classManager = new SwimmingClassManager(); // Initialize the SwimmingClassManager
+        this.learners = new HashMap<>();
+    }
     public void showTimeTable() {
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -41,7 +50,11 @@ public class TimetableBooking {
     }
 
     private void showByDay() {
-        System.out.println("Displaying time table by day...");
+//        System.out.println("Displaying time table by day...");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the day to display timetable:");
+        String day = scanner.nextLine();
+        classManager.showByDay(day, learners); // Access timetable from SwimmingClassManager
     }
 
     private void showByGradeLevel() {

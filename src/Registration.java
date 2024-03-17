@@ -11,12 +11,12 @@ public class Registration {
     private final Map<Integer, Learner> learners = new HashMap<>();
 
     public Registration() {
-        addStaticLearner("Stephen", 8, 'M', 3,123456789);
-        addStaticLearner("Benny", 7, 'F', 2,987654321);
-        addStaticLearner("Arshitha", 5, 'F', 1,98876767);
+        addStaticLearner(1,"Stephen", 8, 'M', 3,123456789);
+        addStaticLearner(2,"Benny", 7, 'F', 2,987654321);
+        addStaticLearner(3,"Arshitha", 5, 'F', 1,98876767);
     }
 
-    private void addStaticLearner(String name, int age, char gender, int grade, int phoneNumber) {
+    private void addStaticLearner(int id, String name, int age, char gender, int grade, int phoneNumber) {
         int learnerId = uniqueIdCounter++;
         Learner staticLearner = new Learner(learnerId, name, age, gender, grade, phoneNumber);
         learners.put(learnerId, staticLearner);
@@ -134,5 +134,9 @@ public class Registration {
         Registration registration = new Registration();
         registration.registerNewLearner();
 //        registration.printLearners();
+    }
+
+    public Map<Integer, Learner> getLearners() {
+        return learners;
     }
 }
