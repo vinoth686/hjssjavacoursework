@@ -1,25 +1,18 @@
-import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.time.DateTimeException;
+import java.util.Scanner;
 
 public class Registration {
     private int uniqueIdCounter = 1;
-    private final Map<Integer, Learner> learners = new HashMap<>();
+    Map<Integer, Learner> learners = Learner.learnermap;
 
     public Registration() {
-        addStaticLearner(1,"Stephen", 8, 'M', 3,123456789);
-        addStaticLearner(2,"Benny", 7, 'F', 2,987654321);
-        addStaticLearner(3,"Arshitha", 5, 'F', 1,98876767);
-    }
-
-    private void addStaticLearner(int id, String name, int age, char gender, int grade, int phoneNumber) {
-        int learnerId = uniqueIdCounter++;
-        Learner staticLearner = new Learner(learnerId, name, age, gender, grade, phoneNumber);
-        learners.put(learnerId, staticLearner);
+        // No need to initialize static values here anymore
+        Learner.addStaticPreValues();
     }
 
     private static boolean isValidPhoneNumber(int phoneNumber) {
@@ -75,10 +68,10 @@ public class Registration {
         while (learnerAge < 4 || learnerAge > 11) {
             System.out.println("Invalid age. The proper age to enroll is 4 to 11, Sorry we can't proceed.");
             System.exit(0);
-             MainScreen timetableBookingInstance = new MainScreen();
-             timetableBookingInstance.showMenu();
-//            birthdate = getValidBirthdate(scanner);
-//            age = calculateAge(birthdate, currentDate);
+            // MainScreen timetableBookingInstance = new MainScreen();
+            // timetableBookingInstance.showMenu();
+            // birthdate = getValidBirthdate(scanner);
+            // age = calculateAge(birthdate, currentDate);
         }
 
         System.out.println("Enter the gender of the learner (M/F):");
@@ -101,8 +94,7 @@ public class Registration {
                 scanner.next();
             }
         }
-//        System.out.println("Enter your mobile phone number");
-//        int learnerPhone = scanner.nextInt();
+
         int learnerPhone;
         do {
             System.out.println("Enter your mobile phone number");
@@ -113,12 +105,11 @@ public class Registration {
             learnerPhone = scanner.nextInt();
         } while (isValidPhoneNumber(learnerPhone));
 
-
-        int learnerId = uniqueIdCounter++;
+        int learnerId = learners.size() + 1;
 
         Learner newLearner = new Learner(learnerId, learnerName, learnerAge, learnerGender, learnerGrade, learnerPhone);
 
-        learners.put(learnerId, newLearner);
+        Learner.addDynamicLearner(newLearner);
 
         System.out.println("Learner registered successfully with ID: " + newLearner);
     }
@@ -133,7 +124,7 @@ public class Registration {
     public static void main(String[] args) {
         Registration registration = new Registration();
         registration.registerNewLearner();
-//        registration.printLearners();
+        registration.printLearners();
     }
 
     public Map<Integer, Learner> getLearners() {

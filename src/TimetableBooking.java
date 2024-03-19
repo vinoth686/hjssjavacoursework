@@ -54,7 +54,7 @@ public class TimetableBooking {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the day to display timetable:");
         String day = scanner.nextLine();
-        classManager.showByDay(day, learners); // Access timetable from SwimmingClassManager
+        classManager.showByDay(day, learners);
     }
 
     private void showByGradeLevel() {

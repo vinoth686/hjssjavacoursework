@@ -22,7 +22,11 @@ public class MainScreen {
                 System.out.println("we");
                 break;
             case 3:
-                System.out.println("wee");
+//                System.out.println("wee");
+//                break;
+                Learner.addStaticPreValues();
+               learnerreport testInstance = new learnerreport();
+            testInstance.showlearner();
                 break;
             case 4:
                 System.out.println("er");
@@ -30,7 +34,7 @@ public class MainScreen {
             case 5:
                 Registration registrationInstance = new Registration();
                 registrationInstance.registerNewLearner();
-//                registrationInstance.printLearners();
+                registrationInstance.printLearners();
                 break;
             case 6:
                 System.out.println("jk");
