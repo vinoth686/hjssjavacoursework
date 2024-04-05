@@ -112,6 +112,8 @@ public class Registration {
         Learner.addDynamicLearner(newLearner);
 
         System.out.println("Learner registered successfully with ID: " + newLearner);
+        MainScreen mainScreen = new MainScreen();
+        mainScreen.showMenu();
     }
 
     public void printLearners() {

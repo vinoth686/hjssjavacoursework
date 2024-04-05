@@ -8,7 +8,7 @@ public class TimetableBooking {
     private Map<Integer, Learner> learners;
 
     public TimetableBooking() {
-        this.classManager = new SwimmingClassManager(); // Initialize the SwimmingClassManager
+        this.classManager = new SwimmingClassManager();
         this.learners = new HashMap<>();
     }
     public void showTimeTable() {
@@ -54,7 +54,9 @@ public class TimetableBooking {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the day to display timetable:");
         String day = scanner.nextLine();
+        // classManager.showByDay(day, "");
         classManager.showByDay(day, learners);
+//        classManager.showByWeekAndDay(day, learners);
     }
 
     private void showByGradeLevel() {

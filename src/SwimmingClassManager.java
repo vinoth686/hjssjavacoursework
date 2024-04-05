@@ -27,11 +27,11 @@ class SwimmingLesson {
         return false;
     }
 
-    public void displayAvailableSlots() {
-        System.out.println("Lesson: " + name);
-        System.out.println("Time: " + time);
-        System.out.println("Remaining Capacity: " + (maxCapacity - learners.size()));
+    public void displayAvailableSlots(String day) {
+        String remainingCapacity = "Remaining Capacity: " + (maxCapacity - learners.size());
+        System.out.printf("| %-10s | %-10s | %-20s |\n", day, time, remainingCapacity);
     }
+
     public String getTime() {
         return time;
     }
@@ -39,37 +39,13 @@ class SwimmingLesson {
 
 public class SwimmingClassManager {
     private final Map<String, List<SwimmingLesson>> lessonsByDay;
-
+    private final List<BookingDetails> bookings;
     public SwimmingClassManager() {
         lessonsByDay = new HashMap<>();
+        bookings = new ArrayList<>();
         initializeLessons();
     }
 
-
-//    private void initializeLessons() {
-//        String[] days = {"Monday", "Wednesday", "Friday", "Saturday"};
-//        String[] timesMondayWednesdayFriday = {"4-5pm", "5-6pm", "6-7pm"};
-//        String[] timesSaturday = {"2-3pm", "3-4pm"};
-//        for (String day : days) {
-//            List<SwimmingLesson> lessons = new ArrayList<>();
-//            String[] times;
-//            if (day.equals("Saturday")) {
-//                times = timesSaturday;
-//            } else {
-//                times = timesMondayWednesdayFriday;
-//            }
-//            for (String time : times) {
-////                SwimmingLesson lesson = new SwimmingLesson("Grade " + (lessons.size() + 1), time, 4);
-////                lessons.add(lesson);
-//
-//                for (int i = 1; i <= 5; i++) {
-//                    SwimmingLesson lesson = new SwimmingLesson("Grade " + i, time, 4);
-//                    lessons.add(lesson);
-//                }
-//            }
-//            lessonsByDay.put(day, lessons);
-//        }
-//    }
 
     private void initializeLessons() {
         Learner.addStaticPreValues();
@@ -91,216 +67,122 @@ public class SwimmingClassManager {
             }
 
             for (String time : times) {
-                for (int i = 1; i <= 5; i++) {
-                    SwimmingLesson lesson = new SwimmingLesson("Grade " + i, time, 4);
-                    lessons.add(lesson);
-                }
+                SwimmingLesson lesson = new SwimmingLesson(day + " " + time, time, 4);
+                lessons.add(lesson);
             }
 
             lessonsByDay.put(day, lessons);
         }
     }
 
-    public void bookLesson(String day, String time, String learnerName) {
-        List<SwimmingLesson> lessons = lessonsByDay.get(day);
-        if (lessons != null) {
-            for (SwimmingLesson lesson : lessons) {
-                if (lesson.getTime().equals(time)) {
-
-                    if (lesson.addLearner(learnerName)) {
-                        System.out.println("Lesson booked successfully for " + learnerName);
-                    } else {
-                        System.out.println("Sorry, the lesson is already full.");
-                    }
-                    return;
-                }
-            }
-            System.out.println("Invalid time for " + day);
-        } else {
-            System.out.println("No lessons available for " + day);
-        }
-    }
-
-//    public void showByDay(String day, Map<Integer, Learner> learners) {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Displaying timetable for " + day + ":");
-//        List<SwimmingLesson> lessons = lessonsByDay.get(day);
-//        if (lessons != null) {
-//            for (SwimmingLesson lesson : lessons) {
-//                lesson.displayAvailableSlots();
-//            }
-//
-//            // Prompt the user to choose a slot
-//            System.out.println("Choose a slot (enter time, e.g., 4-5pm):");
-//            String chosenTime = scanner.nextLine();
-//
-//            // Find the lesson corresponding to the chosen time
-//            for (SwimmingLesson lesson : lessons) {
-//                if (lesson.getTime().equals(chosenTime)) {
-//                    // Try to book the chosen slot
-//                    System.out.println("Enter learner's ID:");
-//                    int learnerId = scanner.nextInt();
-//                    scanner.nextLine(); // Consume newline
-//                    Learner learner = learners.get(learnerId);
-//                    if (learner != null && learner.getGrade() >= Integer.parseInt(lesson.getName().substring(6))) {
-//                        if (lesson.addLearner(learner.getName())) {
-//                            System.out.println("Slot booked successfully for " + learner.getName());
-//                        } else {
-//                            System.out.println("Sorry, the slot is already full.");
-//                        }
-//                    } else {
-//                        System.out.println("Invalid learner ID or grade.");
-//                    }
-//                    return;
-//                }
-//            }
-//            System.out.println("Invalid slot chosen.");
-//        } else {
-//            System.out.println("No lessons available for " + day);
-//        }
-//    }
-//public void showByDay(String day, Map<Integer, Learner> learners) {
-//    Scanner scanner = new Scanner(System.in);
-//    System.out.println("Displaying timetable for " + day + ":");
-//    List<SwimmingLesson> lessons = lessonsByDay.get(day);
-//    if (lessons != null) {
-//        for (SwimmingLesson lesson : lessons) {
-//            lesson.displayAvailableSlots();
-//        }
-//
-//        // Prompt the user to choose a slot
-//        System.out.println("Choose a slot (enter time, e.g., 4-5pm):");
-//        String chosenTime = scanner.nextLine();
-//
-//        // Find the lesson corresponding to the chosen time
-//        for (SwimmingLesson lesson : lessons) {
-//            if (lesson.getTime().equals(chosenTime)) {
-//                // Try to book the chosen slot
-//                System.out.println("Enter learner's ID:");
-//                int learnerId = scanner.nextInt();
-//                scanner.nextLine(); // Consume newline
-//                Learner learner = learners.get(learnerId);
-//                if (learner != null) {
-//                    // Extract grade number from lesson name using regular expression
-//                    Pattern pattern = Pattern.compile("\\b\\d+\\b");
-//                    Matcher matcher = pattern.matcher(lesson.getName());
-//                    if (matcher.find()) {
-//                        int lessonGrade = Integer.parseInt(matcher.group());
-//                        if (learner.getGrade() >= lessonGrade) {
-//                            if (lesson.addLearner(learner.getName())) {
-//                                System.out.println("Slot booked successfully for " + learner.getName());
-//                            } else {
-//                                System.out.println("Sorry, the slot is already full.");
-//                            }
-//                        } else {
-//                            System.out.println("Learner's grade is too low for this lesson.");
-//                        }
-//                    } else {
-//                        System.out.println("Failed to extract lesson grade.");
-//                    }
-//                } else {
-//                    System.out.println("Invalid learner ID.");
-//                }
-//                return;
-//            }
-//        }
-//        System.out.println("Invalid slot chosen.");
-//    } else {
-//        System.out.println("No lessons available for " + day);
-//    }
-//}
-//public void showByDay(String day, Map<Integer, Learner> learners) {
-//    Scanner scanner = new Scanner(System.in);
-//    System.out.println("Displaying timetable for " + day + ":");
-//    List<SwimmingLesson> lessons = lessonsByDay.get(day);
-//    if (lessons != null) {
-//        for (SwimmingLesson lesson : lessons) {
-//            lesson.displayAvailableSlots();
-//        }
-//
-//        System.out.println("Choose a slot (enter time, e.g., 4-5pm):");
-//        String chosenTime = scanner.nextLine();
-//
-//        for (SwimmingLesson lesson : lessons) {
-//            if (lesson.getTime().equals(chosenTime)) {
-//                System.out.println("Enter learner's ID:");
-//                int learnerId = scanner.nextInt();
-//                scanner.nextLine();
-//
-//                System.out.println("Registered learners: " + learners);
-//
-//                Learner learner = learners.get(learnerId);
-//                if (learner != null && learner.getGrade() >= Integer.parseInt(lesson.getName().substring(6))) {
-//                    if (lesson.addLearner(learner.getName())) {
-//                        System.out.println("Slot booked successfully for " + learner.getName());
-//                    } else {
-//                        System.out.println("Sorry, the slot is already full.");
-//                    }
-//                } else {
-//                    System.out.println("Invalid learner ID or grade.");
-//                }
-//                return;
-//            }
-//        }
-//        System.out.println("Invalid slot chosen.");
-//    } else {
-//        System.out.println("No lessons available for " + day);
-//    }
-//}
-public void showByDay(String day, Map<Integer, Learner> learners) {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Displaying timetable for " + day + ":");
-    List<SwimmingLesson> lessons = lessonsByDay.get(day);
-    if (lessons != null) {
-        for (SwimmingLesson lesson : lessons) {
-            lesson.displayAvailableSlots();
-        }
-
-        System.out.println("Registered learners: ");
-//        for (Map.Entry<Integer, Learner> entry : learners.entrySet()) {
-//            System.out.println("ID: " + entry.getKey() + ", Name: " + entry.getValue().getName());
-//        }
-//        for (Learner learner : learners.values()) {
+//    private void initializeLessons() {
+//        Learner.addStaticPreValues();
+//        for (Learner learner : Learner.learnermap.values()) {
 //            System.out.println(learner);
 //        }
-        Registration registrationInstance = new Registration();
-        registrationInstance.printLearners();
+//        String[] days = {"Monday", "Wednesday", "Friday", "Saturday"};
+//        String[] timesMondayWednesdayFriday = {"4-5pm", "5-6pm", "6-7pm"};
+//        String[] timesSaturday = {"2-3pm", "3-4pm"};
+//
+//        for (int week = 1; week <= 4; week++) { // Loop for 4 weeks
+//            for (String day : days) {
+//                List<SwimmingLesson> lessons = new ArrayList<>();
+//
+//                String[] times;
+//                if (day.equals("Saturday")) {
+//                    times = timesSaturday;
+//                } else {
+//                    times = timesMondayWednesdayFriday;
+//                }
+//
+//                for (String time : times) {
+//                    SwimmingLesson lesson = new SwimmingLesson("Week " + week + " " + day + " " + time, time, 4);
+//                    lessons.add(lesson);
+//                }
+//
+//                lessonsByDay.put("Week " + week + " " + day, lessons);
+//            }
+//        }
+//    }
 
-        System.out.println("Choose a slot (enter time, e.g., 4-5pm):");
-        String chosenTime = scanner.nextLine();
+    public void showByDay(String day, Map<Integer, Learner> learners) {
+        Scanner scanner = new Scanner(System.in);
+        boolean continueBooking = true;
 
-        for (SwimmingLesson lesson : lessons) {
-            if (lesson.getTime().equals(chosenTime)) {
-                Learner.addStaticPreValues();
-                for (Learner learner : Learner.learnermap.values()) {
-                    System.out.println(learner);
+        while (continueBooking) {
+            System.out.println("Displaying timetable for " + day + ":");
+            List<SwimmingLesson> lessons = lessonsByDay.get(day);
+            System.out.println(lessons);
+            if (lessons != null) {
+                for (SwimmingLesson lesson : lessons) {
+                    lesson.displayAvailableSlots(day);
                 }
-                System.out.println("Enter learner's ID:");
-                int learnerId = scanner.nextInt();
-                scanner.nextLine();
 
-                Learner learner = Learner.learnermap.get(learnerId);
-                if (learner != null) {
-                    // Extract grade from lesson name
-                    int lessonGrade = Integer.parseInt(lesson.getName().replaceAll("\\D+", ""));
-                    if (learner.getGrade() >= lessonGrade) {
-                        if (lesson.addLearner(learner.getName())) {
-                            System.out.println("Slot booked successfully for " + learner.getName());
+                System.out.println("Choose a slot (enter time, e.g., 4-5pm):");
+                String chosenTime = scanner.nextLine();
+
+                for (SwimmingLesson lesson : lessons) {
+                    if (lesson.getTime().equals(chosenTime)) {
+                        Learner.addStaticPreValues();
+                        System.out.println("Enter learner's ID:");
+                        int learnerId = scanner.nextInt();
+                        scanner.nextLine();
+
+                        Learner learner = Learner.learnermap.get(learnerId);
+                        if (learner != null) {
+                            System.out.println("Hey " + learner.getName() + ", you are currently in grade " + learner.getGrade() + ". Which grade do you want to book the class for?");
+                            int desiredGrade = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if (desiredGrade >= learner.getGrade() && desiredGrade <= learner.getGrade() + 1) {
+                                if (lesson.addLearner(learner.getName())) {
+                                    BookingDetails booking = new BookingDetails(learner.getName(), desiredGrade, day, chosenTime, "booked");
+                                    bookings.add(booking);
+                                    System.out.println("Slot booked successfully for " + learner.getName());
+                                    System.out.println("Booked User Details:");
+                                    System.out.println("User: " + learner.getName());
+                                    System.out.println("Grade: " + desiredGrade);
+                                    System.out.println("Day: " + day);
+                                    System.out.println("Time Slot: " + chosenTime);
+                                    System.out.println("Booking Status: " + booking.getStatus());
+                                    for (SwimmingLesson test : lessons) {
+                                        test.displayAvailableSlots(day);
+                                    }
+                                    System.out.println("All Booking Details:");
+                                    for (BookingDetails booked : bookings) {
+                                        System.out.println("Booking ID: " + booked.getBookingId());
+                                        System.out.println("User: " + booked.getUserName());
+                                        System.out.println("Grade: " + booked.getUserGrade());
+                                        System.out.println("Day: " + booked.getDay());
+                                        System.out.println("Time Slot: " + booked.getTimeSlot());
+                                        System.out.println("Status: " + booked.getStatus());
+                                        System.out.println();
+                                    }
+                                } else {
+                                    System.out.println("Sorry, the slot is already full.");
+                                }
+                            } else {
+                                System.out.println("You can only book your current grade or the next grade.");
+                            }
                         } else {
-                            System.out.println("Sorry, the slot is already full.");
+                            System.out.println("Invalid learner ID.");
                         }
-                    } else {
-                        System.out.println("Learner's grade is too low for this lesson.");
+
+                        System.out.println("Do you want to book another lesson? (yes/no)");
+                        String choice = scanner.nextLine().trim().toLowerCase();
+                        if (!choice.equals("yes")) {
+                            continueBooking = false;
+                        }
+                        break;
                     }
-                } else {
-                    System.out.println("Invalid learner ID.");
                 }
-                return;
+//                if (continueBooking) {
+//                    System.out.println("Invalid slot chosen.");
+//                }
+            } else {
+                System.out.println("No lessons available for " + day);
+                continueBooking = false;
             }
         }
-        System.out.println("Invalid slot chosen.");
-    } else {
-        System.out.println("No lessons available for " + day);
     }
-}
 }
