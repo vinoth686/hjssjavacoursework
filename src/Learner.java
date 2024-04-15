@@ -10,6 +10,10 @@ public class Learner {
     private final int emergencyContact;
     public static Map<Integer, Learner> learnermap = new HashMap<Integer, Learner>();
 
+    static {
+        addStaticPreValues();
+    }
+
     public Learner(int id, String name, int age, char gender, int grade, int learnerPhone) {
         this.id = id;
         this.name = name;
@@ -55,5 +59,9 @@ public class Learner {
 
     public static Learner getLearnerById(int id) {
         return learnermap.get(id);
+    }
+
+    public int getId() {
+        return id;
     }
 }

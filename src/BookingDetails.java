@@ -1,12 +1,12 @@
 public class BookingDetails {
     private static int nextBookingId = 1;
-
     private final int bookingId;
     private final String userName;
     private final int userGrade;
     private final String day;
     private final String timeSlot;
     private String status;
+    private int learnerId;
 
     public BookingDetails(String userName, int userGrade, String day, String timeSlot, String status    ) {
         this.bookingId = nextBookingId++;
@@ -14,6 +14,7 @@ public class BookingDetails {
         this.userGrade = userGrade;
         this.day = day;
         this.timeSlot = timeSlot;
+        this.learnerId = learnerId;
         this.status = "booked";
     }
     
@@ -39,6 +40,10 @@ public class BookingDetails {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getLearnerId() {
+        return learnerId;
     }
 
     public void setStatus(String status) {

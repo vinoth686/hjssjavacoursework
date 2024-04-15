@@ -8,7 +8,7 @@ public class TimetableBooking {
     private Map<Integer, Learner> learners;
 
     public TimetableBooking() {
-        this.classManager = new SwimmingClassManager();
+        this.classManager = SwimmingClassManager.getInstance();
         this.learners = new HashMap<>();
     }
     public void showTimeTable() {
@@ -50,20 +50,25 @@ public class TimetableBooking {
     }
 
     private void showByDay() {
-//        System.out.println("Displaying time table by day...");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the day to display timetable:");
         String day = scanner.nextLine();
-        // classManager.showByDay(day, "");
-        classManager.showByDay(day, learners);
-//        classManager.showByWeekAndDay(day, learners);
+        classManager.showByDay(day);
     }
 
     private void showByGradeLevel() {
-        System.out.println("Displaying time table by grade level...");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the grade level to display timetable:");
+        int grade = scanner.nextInt();
+        scanner.nextLine();
+        classManager.showByGrade(grade);
     }
 
+
     private void showByCoach() {
-        System.out.println("Displaying time table by coach...");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the coach's name to display their timetable:");
+        String coachName = scanner.nextLine().trim();
+        classManager.showByCoach();
     }
 }

@@ -1,6 +1,11 @@
 import java.util.Scanner;
 
 public class MainScreen {
+    private SwimmingClassManager classManager;
+
+    public MainScreen() {
+        this.classManager = SwimmingClassManager.getInstance();
+    }
     public void showMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to HJSS, Select an option to proceed:");
@@ -19,7 +24,8 @@ public class MainScreen {
                 timetableBookingInstance.showTimeTable();
                 break;
             case 2:
-                System.out.println("we");
+                AttendClass attendClassInstance = new AttendClass(classManager);
+                attendClassInstance.attendSwimmingLesson();
                 break;
             case 3:
 //                System.out.println("wee");
