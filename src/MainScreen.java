@@ -28,8 +28,6 @@ public class MainScreen {
                 attendClassInstance.attendSwimmingLesson();
                 break;
             case 3:
-//                System.out.println("wee");
-//                break;
                 Learner.addStaticPreValues();
                learnerreport testInstance = new learnerreport();
             testInstance.showlearner();
@@ -43,7 +41,8 @@ public class MainScreen {
                 registrationInstance.printLearners();
                 break;
             case 6:
-                System.out.println("jk");
+                ChangeOrCancelBooking changeOrCancelBookingInstance = new ChangeOrCancelBooking(classManager);
+                changeOrCancelBookingInstance.modifyBooking();
                 break;
             default:
                 System.out.println("Invalid choice. Please select a valid option.");

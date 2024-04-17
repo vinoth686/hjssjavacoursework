@@ -3,8 +3,8 @@ public class BookingDetails {
     private final int bookingId;
     private final String userName;
     private final int userGrade;
-    private final String day;
-    private final String timeSlot;
+    private String day;
+    private String timeSlot;
     private String status;
     private int learnerId;
 
@@ -40,6 +40,14 @@ public class BookingDetails {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
     }
 
     public int getLearnerId() {

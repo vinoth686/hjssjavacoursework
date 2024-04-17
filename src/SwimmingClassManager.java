@@ -8,7 +8,13 @@ class SwimmingLesson {
     private final int grade;
     final String coach;
     final int maxCapacity;
-    final List<String> learners;
+    List<String> learners;
+    int remainingCapacity;
+
+    public int getRemainingCapacity() {
+        return remainingCapacity;
+    }
+
 
     public SwimmingLesson(String name, String time, int grade, String coach, int maxCapacity) {
         this.name = name;
@@ -17,8 +23,12 @@ class SwimmingLesson {
         this.coach = coach;
         this.maxCapacity = maxCapacity;
         this.learners = new ArrayList<>();
+        this.remainingCapacity = maxCapacity;
     }
 
+    public void updateCapacity() {
+        this.remainingCapacity = this.maxCapacity - this.learners.size();
+    }
     public String getName() {
         return name;
     }
@@ -36,6 +46,7 @@ class SwimmingLesson {
     }
 
     public void displayAvailableSlots(String day) {
+        updateCapacity();
         String remainingCapacity = "Remaining Capacity: " + (maxCapacity - learners.size());
         System.out.printf("| %-10s | %-10s | %-20s |\n", day, time, remainingCapacity);
     }
@@ -49,6 +60,10 @@ public class SwimmingClassManager {
     private static SwimmingClassManager single_instance = null;
     private final Map<String, List<SwimmingLesson>> lessonsByDay;
     private final List<BookingDetails> bookings;
+
+    public List<SwimmingLesson> getLessonsByDay(String day) {
+        return lessonsByDay.getOrDefault(day, new ArrayList<>());
+    }
     public SwimmingClassManager() {
         lessonsByDay = new HashMap<>();
         bookings = new ArrayList<>();
@@ -62,7 +77,6 @@ public class SwimmingClassManager {
         return single_instance;
     }
     private void initializeLessons() {
-        // Example lessons based on the new structure
         List<SwimmingLesson> lessons = Arrays.asList(
                 new SwimmingLesson("Grade 1 Saturday 2-3pm", "2-3pm", 1, "Raj", 4),
                 new SwimmingLesson("Grade 2 Saturday 3-4pm", "3-4pm", 2, "Raj", 4),
@@ -311,6 +325,8 @@ public class SwimmingClassManager {
                 continue;
             }
 
+
+
             System.out.println("Available classes:");
             for (SwimmingLesson lesson : lessons) {
                 lesson.displayAvailableSlots(lesson.getName().split(" ")[2]);
@@ -344,9 +360,6 @@ public class SwimmingClassManager {
                 System.out.println("Sorry, either the slot is already full or you have already booked this class.");
             }
 
-//            System.out.println("Do you want to book another lesson? (yes/no)");
-//            continueBooking = "yes".equalsIgnoreCase(scanner.nextLine().trim());
-
             System.out.println("Do you want to book another lesson? (yes/no)");
             String choice = scanner.nextLine().trim().toLowerCase();
             continueBooking = "yes".equals(choice);
@@ -366,7 +379,7 @@ public class SwimmingClassManager {
             if (!lessons.isEmpty()) {
                 System.out.println("Classes available with Coach " + coach + ":");
                 for (SwimmingLesson lesson : lessons) {
-                    lesson.displayAvailableSlots(lesson.getName().split(" ")[2]);  // Day extracted from name
+                    lesson.displayAvailableSlots(lesson.getName().split(" ")[2]);
                     found = true;
                 }
             }
@@ -398,10 +411,28 @@ public class SwimmingClassManager {
         }
     }
 
+
+    // old workin codeeee
+//    private SwimmingLesson findLessonByName(String name) {
+//        String formattedName = name.trim().toLowerCase();
+//        for (List<SwimmingLesson> lessons : lessonsByDay.values()) {
+//            for (SwimmingLesson lesson : lessons) {
+//                if (lesson.getName().equalsIgnoreCase(name)) {
+//                    return lesson;
+//                }
+//            }
+//        }
+//        return null;
+//    }
+
+// new to changing logoc
     private SwimmingLesson findLessonByName(String name) {
-        for (List<SwimmingLesson> lessons : lessonsByDay.values()) {
-            for (SwimmingLesson lesson : lessons) {
-                if (lesson.getName().equalsIgnoreCase(name)) {
+        String formattedSearchName = name.trim().toLowerCase();
+
+        for (Map.Entry<String, List<SwimmingLesson>> entry : lessonsByDay.entrySet()) {
+            for (SwimmingLesson lesson : entry.getValue()) {
+                String formattedLessonName = lesson.getName().toLowerCase();
+                if (formattedLessonName.equals(formattedSearchName)) {
                     return lesson;
                 }
             }
@@ -429,8 +460,6 @@ public class SwimmingClassManager {
                     lesson.coach, lesson.getName().split(" ")[2], lesson.getGrade(), lesson.getTime(), lesson.maxCapacity - lesson.learners.size());
         }
         System.out.println("Choose a time slot (e.g., '4-5pm'):");
-//        String chosenTime = scanner.nextLine().trim();
-//        bookClass(chosenTime, lessons);
     }
 
 //    private void bookClass(String chosenTime, List<SwimmingLesson> lessons) {
@@ -513,6 +542,120 @@ public class SwimmingClassManager {
                 return booking;
             }
         }
-        return null; // Return null if no matching booking is found
+        return null;
     }
+
+
+    public boolean changeBooking(BookingDetails existingBooking, String newClassName) {
+        SwimmingLesson newLesson = findLessonByName(newClassName);
+        if (newLesson != null && newLesson.addLearner(existingBooking.getUserName())) {
+            newLesson.updateCapacity();
+
+            SwimmingLesson oldLesson = findLessonByName("Grade " + existingBooking.getUserGrade() + " " + existingBooking.getDay() + " " + existingBooking.getTimeSlot());
+            if (oldLesson != null) {
+                oldLesson.learners.remove(existingBooking.getUserName());
+                oldLesson.updateCapacity();
+            }
+
+            existingBooking.setDay(newLesson.getName().split(" ")[2]);
+            existingBooking.setTimeSlot(newLesson.getTime());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cancelBooking(BookingDetails booking) {
+        System.out.println("Attempting to find lesson: " + booking.getDay() + " " + booking.getTimeSlot());
+        SwimmingLesson lesson = findLessonByName(booking.getDay() + " " + booking.getTimeSlot());
+        if (lesson != null) {
+            System.out.println("Lesson found. Checking if booking exists.");
+            if (bookings.contains(booking)) {
+                System.out.println("Booking found. Attempting to remove learner: " + booking.getUserName());
+                boolean removed = lesson.learners.remove(booking.getUserName());
+                System.out.println("Learner removed: " + removed);
+                bookings.remove(booking);
+                return true;
+            } else {
+                System.out.println("Booking not found in the list.");
+            }
+        } else {
+            System.out.println("No lesson found with the given name.");
+        }
+        return false;
+    }
+
+    public List<SwimmingLesson> getLessonsByGrade(int grade) {
+        List<SwimmingLesson> lessons = new ArrayList<>();
+        for (List<SwimmingLesson> dayLessons : lessonsByDay.values()) {
+            for (SwimmingLesson lesson : dayLessons) {
+                if (lesson.getGrade() == grade) {
+                    lessons.add(lesson);
+                }
+            }
+        }
+        return lessons;
+    }
+
+    public void showAvailableClassesByGrade(int grade) {
+        List<SwimmingLesson> lessons = getLessonsByGrade(grade);
+        displayAvailableClasses(lessons);
+    }
+
+    public void showAvailableSlots(String day, int grade) {
+        List<SwimmingLesson> lessons = lessonsByDay.get(day);
+        for (SwimmingLesson lesson : lessons) {
+            if (lesson.getGrade() == grade) {
+                System.out.println(lesson.getTime() + " - Available Capacity: " + (lesson.maxCapacity - lesson.learners.size()));
+            }
+        }
+    }
+
+    public boolean updateBooking(BookingDetails existingBooking, String newTimeSlot) {
+        String day = existingBooking.getDay();
+        int grade = existingBooking.getUserGrade();
+        String learnerName = existingBooking.getUserName();
+
+        List<SwimmingLesson> dayLessons = lessonsByDay.get(day);
+
+        SwimmingLesson newLesson = null;
+        SwimmingLesson oldLesson = null;
+        for (SwimmingLesson lesson : dayLessons) {
+            if (lesson.getTime().equals(newTimeSlot) && lesson.getGrade() == grade) {
+                newLesson = lesson;
+            }
+            if (lesson.getTime().equals(existingBooking.getTimeSlot()) && lesson.getGrade() == grade) {
+                oldLesson = lesson;
+            }
+        }
+
+        if (newLesson == null || oldLesson == null || newLesson == oldLesson) {
+            System.out.println("Error finding lessons. No changes made.");
+            return false;
+        }
+
+        boolean removed = oldLesson.learners.remove(learnerName);
+        if (removed) {
+            oldLesson.updateCapacity();
+            newLesson.learners.add(learnerName);
+            newLesson.updateCapacity();
+            
+            existingBooking.setTimeSlot(newTimeSlot);
+
+            System.out.println("Booking updated successfully.");
+            return true;
+        } else {
+            System.out.println("Error updating booking. Learner not found in old lesson.");
+            return false;
+        }
+    }
+
+
+
+
+
+
+//    public void displayAvailableClasses(List<SwimmingLesson> lessons) {
+//        for (SwimmingLesson lesson : lessons) {
+//            System.out.println(lesson.getName() + " at " + lesson.getTime() + " with " + lesson.coach + ". Capacity left: " + (lesson.maxCapacity - lesson.learners.size()));
+//        }
 }
