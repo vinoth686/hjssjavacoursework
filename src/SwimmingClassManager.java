@@ -6,7 +6,7 @@ class SwimmingLesson {
     private final String name;
     private final String time;
     private final int grade;
-    final String coach;
+    public final String coach;
     final int maxCapacity;
     List<String> learners;
     int remainingCapacity;
@@ -14,8 +14,6 @@ class SwimmingLesson {
     public int getRemainingCapacity() {
         return remainingCapacity;
     }
-
-
     public SwimmingLesson(String name, String time, int grade, String coach, int maxCapacity) {
         this.name = name;
         this.time = time;
@@ -58,6 +56,7 @@ class SwimmingLesson {
 
 public class SwimmingClassManager {
     private static SwimmingClassManager single_instance = null;
+    private static int lastBookingId = 0;
     private final Map<String, List<SwimmingLesson>> lessonsByDay;
     private final List<BookingDetails> bookings;
 
@@ -68,6 +67,48 @@ public class SwimmingClassManager {
         lessonsByDay = new HashMap<>();
         bookings = new ArrayList<>();
         initializeLessons();
+    }
+
+    public BookingDetails getBookingById(int bookingId) {
+        for (BookingDetails booking : bookings) {
+            if (booking.getBookingId() == bookingId) {
+                return booking;
+            }
+        }
+        return null;
+    }
+
+    public boolean cancelBooking(BookingDetails booking) {
+        String lessonName = "Grade " + booking.getUserGrade() + " " + booking.getDay() + " " + booking.getTimeSlot();
+        System.out.println("Looking for lesson: " + lessonName);
+        SwimmingLesson lesson = findLessonByName(lessonName);
+        System.out.println("Lesson found: " + (lesson != null));
+        if (lesson != null && bookings.contains(booking)) {
+            System.out.println("Booking exists in list. Trying to remove learner: " + booking.getUserName());
+            boolean removed = lesson.learners.removeIf(user -> user.equalsIgnoreCase(booking.getUserName()));
+            System.out.println("Learner removed: " + removed);
+            if (removed) {
+                lesson.updateCapacity();
+                bookings.remove(booking);
+                System.out.println("Booking cancelled successfully. Updated capacities:");
+                displayAvailableClassesByDay(booking.getDay());
+                return true;
+            } else {
+                System.out.println("Failed to remove booking. No changes made.");
+                return false;
+            }
+        }
+        System.out.println("No lesson found with the given name or booking does not exist. Cancellation unsuccessful.");
+        return false;
+    }
+
+
+    private void displayAvailableClassesByDay(String day) {
+        List<SwimmingLesson> lessons = getLessonsByDay(day);
+        for (SwimmingLesson lesson : lessons) {
+            System.out.printf("| %-10s | %-10s | Remaining Capacity: %d |\n",
+                    lesson.getTime(), lesson.coach, lesson.getRemainingCapacity());
+        }
     }
 
     public static SwimmingClassManager getInstance() {
@@ -97,9 +138,19 @@ public class SwimmingClassManager {
         }
     }
 
+//    private String extractDayFromLessonName(String lessonName) {
+//        String[] parts = lessonName.split(" ");
+//        return parts.length > 1 ? parts[1] : "Unknown Day";
+//    }
+
     private String extractDayFromLessonName(String lessonName) {
-        String[] parts = lessonName.split(" ");
-        return parts.length > 1 ? parts[1] : "Unknown Day";
+
+        Pattern p = Pattern.compile("\\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b");
+        Matcher m = p.matcher(lessonName);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return "Unknown Day";
     }
 
     public void showByDay(String day) {
@@ -157,7 +208,7 @@ public class SwimmingClassManager {
                 }
 
                 if (selectedLesson.addLearner(learner.getName())) {
-                    BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), chosenDay, chosenTime, "booked");
+                    BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), chosenDay, chosenTime,  selectedLesson.coach,"booked");
                     bookings.add(booking);
                     System.out.println("Booking successful!");
 
@@ -275,7 +326,9 @@ public class SwimmingClassManager {
             }
 
             if (selectedLesson.addLearner(learner.getName())) {
-                BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(), "booked");
+                String correctDay = extractDayFromLessonName(selectedLesson.getName());
+//                BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(), "booked");
+                BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), correctDay, selectedLesson.getTime(), selectedLesson.coach,"booked");
                 bookings.add(booking);
                 System.out.println("Booking successful!");
                 System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n", booking.getBookingId(), booking.getUserName(), booking.getUserGrade(), booking.getTimeSlot(), booking.getDay());
@@ -325,8 +378,6 @@ public class SwimmingClassManager {
                 continue;
             }
 
-
-
             System.out.println("Available classes:");
             for (SwimmingLesson lesson : lessons) {
                 lesson.displayAvailableSlots(lesson.getName().split(" ")[2]);
@@ -350,7 +401,7 @@ public class SwimmingClassManager {
 
             if (selectedLesson.addLearner(learner.getName())) {
                 BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(),
-                        extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(), "booked");
+                        extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(),  selectedLesson.coach,"booked");
                 bookings.add(booking);
                 System.out.println("Booking successful!");
                 System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n",
@@ -402,7 +453,7 @@ public class SwimmingClassManager {
         String className = scanner.nextLine().trim();
         SwimmingLesson selectedLesson = findLessonByName(className);
         if (selectedLesson != null && selectedLesson.addLearner(learner.getName())) {
-            BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(), "booked");
+            BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(),  selectedLesson.coach,"booked");
             bookings.add(booking);
             System.out.println("Booking successful! Your booking details:");
             System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n", booking.getBookingId(), booking.getUserName(), booking.getUserGrade(), booking.getTimeSlot(), booking.getDay());
@@ -411,21 +462,6 @@ public class SwimmingClassManager {
         }
     }
 
-
-    // old workin codeeee
-//    private SwimmingLesson findLessonByName(String name) {
-//        String formattedName = name.trim().toLowerCase();
-//        for (List<SwimmingLesson> lessons : lessonsByDay.values()) {
-//            for (SwimmingLesson lesson : lessons) {
-//                if (lesson.getName().equalsIgnoreCase(name)) {
-//                    return lesson;
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
-// new to changing logoc
     private SwimmingLesson findLessonByName(String name) {
         String formattedSearchName = name.trim().toLowerCase();
 
@@ -440,19 +476,6 @@ public class SwimmingClassManager {
         return null;
     }
 
-
-//    private void displayAlternativeClasses(int currentGrade, int nextGrade) {
-//        for (String coach : lessonsByDay.keySet()) {
-//            List<SwimmingLesson> lessons = getLessonsByCoachAndGrade(coach, currentGrade, nextGrade);
-//            if (!lessons.isEmpty()) {
-//                System.out.println("Classes available with Coach " + coach + ":");
-//                for (SwimmingLesson lesson : lessons) {
-//                    lesson.displayAvailableSlots(lesson.getName().split(" ")[2]); // Day extracted from name
-//                }
-//            }
-//        }
-//    }
-
     private void displayAvailableClasses(List<SwimmingLesson> lessons) {
         System.out.println("Available classes:");
         for (SwimmingLesson lesson : lessons) {
@@ -462,36 +485,12 @@ public class SwimmingClassManager {
         System.out.println("Choose a time slot (e.g., '4-5pm'):");
     }
 
-//    private void bookClass(String chosenTime, List<SwimmingLesson> lessons) {
-//        for (SwimmingLesson lesson : lessons) {
-//            if (lesson.getTime().equals(chosenTime) && lesson.addLearner(learner.getName())) {
-//                BookingDetails booking = new BookingDetails(learner.getName(), lesson.getGrade(), extractDayFromLessonName(lesson.getName()), chosenTime, "booked");
-//                bookings.add(booking);
-//                System.out.println("Booking successful! Your booking details:");
-//                System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n",
-//                        booking.getBookingId(), booking.getUserName(), booking.getUserGrade(), booking.getTimeSlot(), booking.getDay());
-//                return;
-//            }
-//        }
-//        System.out.println("Invalid time slot entered or slot is full. Please try again.");
-//    }
-
-
-//    private void displayAlternativeClasses(int currentGrade, int nextGrade) {
-//        for (String coach : lessonsByDay.keySet()) {
-//            System.out.println("Classes available with Coach " + coach + ":");
-//            List<SwimmingLesson> lessons = getLessonsByCoachAndGrade(coach, currentGrade, nextGrade);
-//            for (SwimmingLesson lesson : lessons) {
-//                lesson.displayAvailableSlots(lesson.getName().split(" ")[2]);  // Day extracted from name
-//            }
-//        }
-//    }
-
     private void bookClass(String chosenTime, List<SwimmingLesson> lessons, Learner learner) {
+        SwimmingLesson selectedLesson = null;
         for (SwimmingLesson lesson : lessons) {
             if (lesson.getTime().equals(chosenTime)) {
                 if (lesson.addLearner(learner.getName())) {
-                    BookingDetails booking = new BookingDetails(learner.getName(), lesson.getGrade(), extractDayFromLessonName(lesson.getName()), chosenTime, "booked");
+                    BookingDetails booking = new BookingDetails(learner.getName(), lesson.getGrade(), extractDayFromLessonName(lesson.getName()), chosenTime,  selectedLesson.coach,"booked");
                     bookings.add(booking);
                     System.out.println("Booking successful! Your booking details:");
                     System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n",
@@ -506,8 +505,6 @@ public class SwimmingClassManager {
         }
         System.out.println("Invalid time slot entered. Please try again.");
     }
-
-
 
     private List<SwimmingLesson> getLessonsByCoachAndGrade(String coachName, int currentGrade, int nextGrade) {
         List<SwimmingLesson> filteredLessons = new ArrayList<>();
@@ -536,16 +533,6 @@ public class SwimmingClassManager {
         return false;
     }
 
-    public BookingDetails getBookingById(String bookingId) {
-        for (BookingDetails booking : bookings) {
-            if (Integer.toString(booking.getBookingId()).equals(bookingId)) {
-                return booking;
-            }
-        }
-        return null;
-    }
-
-
     public boolean changeBooking(BookingDetails existingBooking, String newClassName) {
         SwimmingLesson newLesson = findLessonByName(newClassName);
         if (newLesson != null && newLesson.addLearner(existingBooking.getUserName())) {
@@ -564,24 +551,14 @@ public class SwimmingClassManager {
         return false;
     }
 
-    public boolean cancelBooking(BookingDetails booking) {
-        System.out.println("Attempting to find lesson: " + booking.getDay() + " " + booking.getTimeSlot());
-        SwimmingLesson lesson = findLessonByName(booking.getDay() + " " + booking.getTimeSlot());
-        if (lesson != null) {
-            System.out.println("Lesson found. Checking if booking exists.");
-            if (bookings.contains(booking)) {
-                System.out.println("Booking found. Attempting to remove learner: " + booking.getUserName());
-                boolean removed = lesson.learners.remove(booking.getUserName());
-                System.out.println("Learner removed: " + removed);
-                bookings.remove(booking);
-                return true;
-            } else {
-                System.out.println("Booking not found in the list.");
-            }
-        } else {
-            System.out.println("No lesson found with the given name.");
-        }
-        return false;
+    public BookingDetails createBooking(String userName, int userGrade, String day, String timeSlot, String coachName) {
+        BookingDetails newBooking = new BookingDetails(userName, userGrade, day, timeSlot,coachName,"booked");
+        bookings.add(newBooking);
+        return newBooking;
+    }
+
+    public void exampleBookingMethod() {
+        createBooking("Test user", 3, "Monday", "4-5pm", "Ashwath");
     }
 
     public List<SwimmingLesson> getLessonsByGrade(int grade) {
@@ -609,7 +586,6 @@ public class SwimmingClassManager {
             }
         }
     }
-
     public boolean updateBooking(BookingDetails existingBooking, String newTimeSlot) {
         String day = existingBooking.getDay();
         int grade = existingBooking.getUserGrade();
@@ -638,7 +614,7 @@ public class SwimmingClassManager {
             oldLesson.updateCapacity();
             newLesson.learners.add(learnerName);
             newLesson.updateCapacity();
-            
+
             existingBooking.setTimeSlot(newTimeSlot);
 
             System.out.println("Booking updated successfully.");
@@ -648,14 +624,4 @@ public class SwimmingClassManager {
             return false;
         }
     }
-
-
-
-
-
-
-//    public void displayAvailableClasses(List<SwimmingLesson> lessons) {
-//        for (SwimmingLesson lesson : lessons) {
-//            System.out.println(lesson.getName() + " at " + lesson.getTime() + " with " + lesson.coach + ". Capacity left: " + (lesson.maxCapacity - lesson.learners.size()));
-//        }
 }

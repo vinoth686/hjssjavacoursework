@@ -11,7 +11,6 @@ public class Registration {
     Map<Integer, Learner> learners = Learner.learnermap;
 
     public Registration() {
-        // No need to initialize static values here anymore
         Learner.addStaticPreValues();
     }
 

@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class BookingDetails {
     private static int nextBookingId = 1;
     private final int bookingId;
@@ -7,8 +9,9 @@ public class BookingDetails {
     private String timeSlot;
     private String status;
     private int learnerId;
+    private String coachName;
 
-    public BookingDetails(String userName, int userGrade, String day, String timeSlot, String status    ) {
+    public BookingDetails(String userName, int userGrade, String day, String timeSlot, String coachName, String status) {
         this.bookingId = nextBookingId++;
         this.userName = userName;
         this.userGrade = userGrade;
@@ -16,10 +19,19 @@ public class BookingDetails {
         this.timeSlot = timeSlot;
         this.learnerId = learnerId;
         this.status = "booked";
+        this.coachName = coachName;
     }
-    
+
     public int getBookingId() {
         return bookingId;
+    }
+
+    public String getCoachName() {
+        return coachName;
+    }
+
+    public void setCoachName(String coachName) {
+        this.coachName = coachName;
     }
 
     public String getUserName() {
@@ -50,12 +62,24 @@ public class BookingDetails {
         this.timeSlot = timeSlot;
     }
 
-    public int getLearnerId() {
-        return learnerId;
-    }
+//    public int getLearnerId() {
+//        return learnerId;
+//    }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        BookingDetails that = (BookingDetails) obj;
+        return this.bookingId == that.bookingId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId);
+    }
 }

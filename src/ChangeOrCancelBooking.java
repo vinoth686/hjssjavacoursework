@@ -11,7 +11,9 @@ public class ChangeOrCancelBooking {
     public void modifyBooking() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your Booking ID to change or cancel:");
-        String bookingId = scanner.nextLine();
+        int bookingId = scanner.nextInt();
+        scanner.nextLine();
+
         BookingDetails existingBooking = classManager.getBookingById(bookingId);
 
         if (existingBooking == null) {
@@ -28,12 +30,10 @@ public class ChangeOrCancelBooking {
         scanner.nextLine();
 
         if (choice == 1) {
-            System.out.println("Available slots (current slot's capacity adjusted):");
             showAvailableSlotsForChange(existingBooking);
             String newTimeSlot = scanner.nextLine();
             if (classManager.updateBooking(existingBooking, newTimeSlot)) {
                 System.out.println("Booking updated successfully.");
-                System.out.println("Updated slot capacities:");
                 displayCurrentSlotCapacities(existingBooking.getDay());
             } else {
                 System.out.println("Failed to update booking. Please try another slot.");
@@ -41,7 +41,6 @@ public class ChangeOrCancelBooking {
         } else if (choice == 2) {
             if (classManager.cancelBooking(existingBooking)) {
                 System.out.println("Booking cancelled successfully.");
-                System.out.println("Updated slot capacities after cancellation:");
                 displayCurrentSlotCapacities(existingBooking.getDay());
             } else {
                 System.out.println("Cancellation failed. Please try again.");
