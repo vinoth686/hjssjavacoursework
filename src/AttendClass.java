@@ -23,7 +23,7 @@ public class AttendClass {
         BookingDetails booking = manager.getBookingById(bookingId);
 
         if (booking != null) {
-            System.out.println("Learner " + booking.getUserName() + " with ID " + booking.getBookingId() +
+            System.out.println("Learner " + booking.getUserName() + " with Booking ID " + booking.getBookingId() +
                     " is now attending the swimming class for Grade " + booking.getUserGrade() +
                     " on " + booking.getDay() + " at " + booking.getTimeSlot() + " with coach " + booking.getCoachName());
 

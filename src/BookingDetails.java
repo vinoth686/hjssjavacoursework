@@ -1,4 +1,5 @@
 import java.util.Objects;
+import java.util.Calendar;
 
 public class BookingDetails {
     private static int nextBookingId = 1;
@@ -10,8 +11,9 @@ public class BookingDetails {
     private String status;
     private int learnerId;
     private String coachName;
+    private final int bookingMonth;
 
-    public BookingDetails(String userName, int userGrade, String day, String timeSlot, String coachName, String status) {
+    public BookingDetails(int learnerId, String userName, int userGrade, String day, String timeSlot, String coachName, String status) {
         this.bookingId = nextBookingId++;
         this.userName = userName;
         this.userGrade = userGrade;
@@ -20,6 +22,12 @@ public class BookingDetails {
         this.learnerId = learnerId;
         this.status = "booked";
         this.coachName = coachName;
+        Calendar now = Calendar.getInstance();
+        this.bookingMonth = now.get(Calendar.MONTH) + 1;
+    }
+
+    public int getBookingMonth() {
+        return bookingMonth;
     }
 
     public int getBookingId() {
@@ -28,6 +36,10 @@ public class BookingDetails {
 
     public String getCoachName() {
         return coachName;
+    }
+
+    public int getLearnerId() {
+        return learnerId;
     }
 
     public void setCoachName(String coachName) {

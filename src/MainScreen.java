@@ -29,8 +29,8 @@ public class MainScreen {
                 break;
             case 3:
                 Learner.addStaticPreValues();
-               learnerreport testInstance = new learnerreport();
-            testInstance.showlearner();
+               LearnerReport showLearner = new LearnerReport();
+                showLearner.showLearner();
                 break;
             case 4:
                 System.out.println("er");
