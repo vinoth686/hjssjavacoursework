@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Calendar;
 
 public class AttendClass {
     private SwimmingClassManager manager;
@@ -16,13 +17,18 @@ public class AttendClass {
             bookingId = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Invalid booking ID. Booking IDs are numeric.");
-            scanner.close();
             return;
         }
 
         BookingDetails booking = manager.getBookingById(bookingId);
 
         if (booking != null) {
+            if ("attended".equalsIgnoreCase(booking.getStatus()) || "cancelled".equalsIgnoreCase(booking.getStatus())) {
+                System.out.println("You have already " + booking.getStatus() + " this class. Please choose another action.");
+                offerNextActions(scanner);
+                return;
+            }
+
             System.out.println("Learner " + booking.getUserName() + " with Booking ID " + booking.getBookingId() +
                     " is now attending the swimming class for Grade " + booking.getUserGrade() +
                     " on " + booking.getDay() + " at " + booking.getTimeSlot() + " with coach " + booking.getCoachName());
@@ -36,23 +42,41 @@ public class AttendClass {
                 rating = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid rating. Ratings must be numeric.");
-                scanner.close();
                 return;
             }
 
-            CoachReport.addReview(new ReviewDetails(booking.getUserName(), booking.getCoachName(), rating, review));
+            Calendar now = Calendar.getInstance();
+            int currentMonth = now.get(Calendar.MONTH) + 1;
+
+            CoachReport.addReview(new ReviewDetails(booking.getUserName(), booking.getCoachName(), rating, review, currentMonth));
 
             System.out.println("Thank you for attending. Your attendance has been successfully recorded.");
             System.out.println("Your review: " + review);
             System.out.println("Your rating: " + rating + "/5");
+            System.out.println("Review month: " + currentMonth);
 
             booking.setStatus("attended");
             System.out.println("Status updated to 'attended'.");
-            MainScreen timetableBookingInstance = new MainScreen();
-            timetableBookingInstance.showMenu();
+            offerNextActions(scanner);
         } else {
             System.out.println("No booking found with ID " + bookingId);
+            offerNextActions(scanner);
         }
-        scanner.close();
+    }
+
+    private void offerNextActions(Scanner scanner) {
+        System.out.println("Enter 'main' to go back to the main menu or 'retry' to enter a new booking ID:");
+        String action = scanner.nextLine().trim().toLowerCase();
+        if ("main".equals(action)) {
+            MainScreen mainScreen = new MainScreen();
+            mainScreen.showMenu();
+        } else if ("retry".equals(action)) {
+            attendSwimmingLesson();
+        } else {
+            System.out.println("Invalid input. Returning to main menu.");
+            MainScreen mainScreen = new MainScreen();
+            mainScreen.showMenu();
+        }
     }
 }
+

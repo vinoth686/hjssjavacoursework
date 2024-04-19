@@ -269,7 +269,6 @@ public class SwimmingClassManager {
 //                    System.out.println("Learner ID: " + booking.getLearnerId());
                     for (BookingDetails booked : bookings) {
                         System.out.println("Booking ID: " + booked.getBookingId());
-                        System.out.println("Learner ID: " + learner.getId());
                         System.out.println("User: " + booked.getUserName());
                         System.out.println("Grade: " + booked.getUserGrade());
                         System.out.println("Day: " + booked.getDay());

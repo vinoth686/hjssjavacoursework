@@ -33,10 +33,9 @@ public class MainScreen {
                 showLearner.showLearner();
                 break;
             case 4:
-                System.out.println("er");
                 CoachReport coachReportInstance = new CoachReport();
                 coachReportInstance.printCoachReports();
-                coachReportInstance.printAllReviews();
+//                coachReportInstance.printAllReviews();
                 break;
             case 5:
                 Registration registrationInstance = new Registration();

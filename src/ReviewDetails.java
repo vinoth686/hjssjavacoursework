@@ -4,12 +4,14 @@ public class ReviewDetails {
     private String coachName;
     private int rating;
     private String comment;
+    private int reviewMonth;
 
-    public ReviewDetails(String userName, String coachName, int rating, String comment) {
+    public ReviewDetails(String userName, String coachName, int rating, String comment, int reviewMonth) {
         this.userName = userName;
         this.coachName = coachName;
         this.rating = rating;
         this.comment = comment;
+        this.reviewMonth = reviewMonth;
     }
 
     public String getUserName() {
@@ -42,5 +44,13 @@ public class ReviewDetails {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public int getReviewMonth() {
+        return reviewMonth;
+    }
+
+    public void setReviewMonth(int reviewMonth) {
+        this.reviewMonth = reviewMonth;
     }
 }

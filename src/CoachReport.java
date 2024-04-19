@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 public class CoachReport {
     private static List<ReviewDetails> reviews = new ArrayList<>();
@@ -12,49 +13,27 @@ public class CoachReport {
     }
 
     public void printCoachReports() {
-        System.out.println("Coach Reports:");
-        for (ReviewDetails review : reviews) {
-            System.out.println("Coach: " + review.getCoachName() + ", User: " + review.getUserName() +
-                    ", Rating: " + review.getRating() + ", Comment: " + review.getComment());
-        }
+        System.out.println("Please enter the month number to view reports (e.g., 03 for March):");
+        int month = scanner.nextInt();
+        scanner.nextLine();
 
-        listCoachesAndAverageRatings();
+        System.out.println("Coach Reports for Month: " + month);
+        Map<String, List<ReviewDetails>> reviewsByCoach = reviews.stream()
+                .filter(r -> r.getReviewMonth() == month)
+                .collect(Collectors.groupingBy(ReviewDetails::getCoachName));
+
+        reviewsByCoach.forEach((coach, reviewsList) -> {
+            System.out.print(coach + " received ");
+            List<Integer> ratings = reviewsList.stream().map(ReviewDetails::getRating).collect(Collectors.toList());
+            String ratingsText = ratings.stream().map(String::valueOf).collect(Collectors.joining(", "));
+            double average = ratings.stream().mapToInt(Integer::intValue).average().orElse(0);
+            System.out.println(ratingsText + " then the average is " + (int)average + ".");
+        });
+
+        finishInteraction();
     }
 
-    private void returnToMainMenu() {
-        MainScreen timetableBookingInstance = new MainScreen();
-        timetableBookingInstance.showMenu();
-    }
-
-    public static void printAllReviews() {
-        for (ReviewDetails review : reviews) {
-            System.out.println("User: " + review.getUserName() + ", Coach: " + review.getCoachName() +
-                    ", Rating: " + review.getRating() + ", Comment: " + review.getComment());
-        }
-    }
-
-    public void listCoachesAndAverageRatings() {
-        System.out.println("Available coaches:");
-        List<String> coaches = List.of("Raj", "Ashwath", "Akash", "Vinodh");
-        coaches.forEach(System.out::println);
-
-        System.out.println("Enter the coach name to view their average rating:");
-        String chosenCoach = scanner.nextLine().trim();
-
-        List<ReviewDetails> filteredReviews = reviews.stream()
-                .filter(r -> r.getCoachName().equalsIgnoreCase(chosenCoach))
-                .collect(Collectors.toList());
-
-        if (!filteredReviews.isEmpty()) {
-            double averageRating = filteredReviews.stream()
-                    .mapToInt(ReviewDetails::getRating)
-                    .average()
-                    .getAsDouble();
-            System.out.printf("The average rating for coach %s is %.2f%n", chosenCoach, averageRating);
-        } else {
-            System.out.println("No ratings found for coach " + chosenCoach);
-        }
-
+    private void finishInteraction() {
         System.out.println("Do you want to go to the main menu or exit? (Enter 'menu' to go to the main menu, anything else to exit)");
         String userChoice = scanner.nextLine().trim();
         if ("menu".equalsIgnoreCase(userChoice)) {
@@ -63,5 +42,10 @@ public class CoachReport {
             System.out.println("Exiting...");
             System.exit(0);
         }
+    }
+
+    private void returnToMainMenu() {
+        MainScreen timetableBookingInstance = new MainScreen();
+        timetableBookingInstance.showMenu();
     }
 }
