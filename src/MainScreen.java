@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MainScreen {
@@ -8,15 +9,32 @@ public class MainScreen {
     }
     public void showMenu() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to HJSS, Select an option to proceed:");
-        System.out.println("1. Book a swimming lesson");
-        System.out.println("2. Attend a swimming lesson");
-        System.out.println("3. Monthly Learner Report");
-        System.out.println("4. Monthly coach report");
-        System.out.println("5. Register a new learner");
-        System.out.println("6. Change/Cancel a booking");
-        int mainOptionChoice = scanner.nextInt();
-        scanner.nextLine();
+        int mainOptionChoice = 0;
+        boolean validChoice = false;
+
+        while (!validChoice) {
+            try {
+                System.out.println("Welcome to HJSS, Select an option to proceed:");
+                System.out.println("1. Book a swimming lesson");
+                System.out.println("2. Attend a swimming lesson");
+                System.out.println("3. Monthly Learner Report");
+                System.out.println("4. Monthly coach report");
+                System.out.println("5. Register a new learner");
+                System.out.println("6. Change/Cancel a booking");
+
+                mainOptionChoice = scanner.nextInt();
+                scanner.nextLine();
+
+                if (mainOptionChoice < 1 || mainOptionChoice > 6) {
+                    System.out.println("Invalid choice. Please select a valid option between 1 and 6.");
+                } else {
+                    validChoice = true;
+                }
+            } catch (InputMismatchException ime) {
+                System.out.println("Invalid input type. Please enter a valid number.");
+                scanner.nextLine();
+            }
+        }
 
         switch (mainOptionChoice) {
             case 1:
@@ -29,13 +47,13 @@ public class MainScreen {
                 break;
             case 3:
                 Learner.addStaticPreValues();
-               LearnerReport showLearner = new LearnerReport();
+                LearnerReport showLearner = new LearnerReport();
                 showLearner.showLearner();
                 break;
             case 4:
                 CoachReport coachReportInstance = new CoachReport();
                 coachReportInstance.printCoachReports();
-//                coachReportInstance.printAllReviews();
+                // coachReportInstance.printAllReviews();
                 break;
             case 5:
                 Registration registrationInstance = new Registration();
@@ -47,7 +65,7 @@ public class MainScreen {
                 changeOrCancelBookingInstance.modifyBooking();
                 break;
             default:
-                System.out.println("Invalid choice. Please select a valid option.");
+                System.out.println("Unexpected error.");
         }
     }
 }

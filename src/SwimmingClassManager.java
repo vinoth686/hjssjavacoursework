@@ -43,11 +43,16 @@ class SwimmingLesson {
         return false;
     }
 
-    public void displayAvailableSlots(String day) {
-        updateCapacity();
-        String remainingCapacity = "Remaining Capacity: " + (maxCapacity - learners.size());
-        System.out.printf("| %-10s | %-10s | %-20s |\n", day, time, remainingCapacity);
-    }
+//    public void displayAvailableSlots(String day) {
+//        updateCapacity();
+//        String remainingCapacity = "Remaining Capacity: " + (maxCapacity - learners.size());
+//        System.out.printf("| %-10s | %-10s | %-20s |\n", day, "Grade " + grade, time, remainingCapacity);
+//    }
+public void displayAvailableSlots(String day) {
+    updateCapacity();
+    String remainingCapacity = "Remaining Capacity: " + this.remainingCapacity;
+    System.out.printf("| %-10s | %-10s | %-10s | %-20s |\n", day, "Grade " + grade, time, remainingCapacity);
+}
 
     public String getTime() {
         return time;
@@ -424,8 +429,20 @@ public class SwimmingClassManager {
 
         System.out.println("Available coaches: " + getCoachesList());
         while (continueBooking) {
-            System.out.println("Enter the coach's name to display their timetable:");
-            String coachName = scanner.nextLine().trim();
+            String coachName = "";
+            boolean isValidName = false;
+
+            while (!isValidName) {
+                System.out.println("Enter the coach's name to display their timetable (letters only):");
+                coachName = scanner.nextLine().trim();
+                if (coachName.matches("[a-zA-Z ]+")) {
+                    isValidName = true;
+                } else {
+                    System.out.println("Invalid input. Please enter letters only.");
+                }
+            }
+//            System.out.println("Enter the coach's name to display their timetable:");
+//            String coachName = scanner.nextLine().trim();
 
             System.out.println("Enter learner's ID:");
             int learnerId = Integer.parseInt(scanner.nextLine().trim());
