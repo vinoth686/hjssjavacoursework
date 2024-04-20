@@ -264,7 +264,7 @@ public class SwimmingClassManager {
 
                 if (selectedLesson.addLearner(learner.getName())) {
                     learner = Learner.getLearnerMap().get(learnerId);
-                    BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), chosenDay, chosenTime,  selectedLesson.coach,"booked");
+                    BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), learner.getEmergencyContact(), learner.getAge(), chosenDay, chosenTime,  selectedLesson.coach,"booked");
                     bookings.add(booking);
                     System.out.println("Booking successful!");
 
@@ -276,6 +276,8 @@ public class SwimmingClassManager {
                         System.out.println("Booking ID: " + booked.getBookingId());
                         System.out.println("User: " + booked.getUserName());
                         System.out.println("Grade: " + booked.getUserGrade());
+                        System.out.println("Age: " + booked.getAge());
+                        System.out.println("Emergency Contact: " + booked.getUserNumber());
                         System.out.println("Day: " + booked.getDay());
                         System.out.println("Time Slot: " + booked.getTimeSlot());
                         System.out.println("Coach: " + booked.getCoachName());
@@ -390,7 +392,7 @@ public class SwimmingClassManager {
                 String correctDay = extractDayFromLessonName(selectedLesson.getName());
                 learner = Learner.getLearnerMap().get(learnerId);
 //                BookingDetails booking = new BookingDetails(learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(), "booked");
-                BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), correctDay, selectedLesson.getTime(), selectedLesson.coach,"booked");
+                BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), learner.getEmergencyContact(), learner.getAge(), correctDay, selectedLesson.getTime(), selectedLesson.coach,"booked");
                 bookings.add(booking);
                 System.out.println("Booking successful!");
                 System.out.printf("Booking ID: %s - %s for Grade %d on %s during %s in month %d\n",
@@ -506,7 +508,7 @@ public class SwimmingClassManager {
 
             if (selectedLesson.addLearner(learner.getName())) {
                 learner = Learner.getLearnerMap().get(learnerId);
-                BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(),
+                BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), learner.getEmergencyContact(),learner.getAge(),
                         extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(),  selectedLesson.coach,"booked");
                 bookings.add(booking);
                 System.out.println("Booking successful!");
@@ -574,7 +576,7 @@ public class SwimmingClassManager {
         SwimmingLesson selectedLesson = findLessonByName(className);
         if (selectedLesson != null && selectedLesson.addLearner(learner.getName())) {
 
-            BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(),  selectedLesson.coach,"booked");
+            BookingDetails booking = new BookingDetails(learner.getId(),learner.getName(), selectedLesson.getGrade(), learner.getEmergencyContact(), learner.getAge(),extractDayFromLessonName(selectedLesson.getName()), selectedLesson.getTime(),  selectedLesson.coach,"booked");
             bookings.add(booking);
             System.out.println("Booking successful! Your booking details:");
             System.out.printf("Booking ID: %s - %s for Grade %d on %s during %s in month %d\n",
@@ -626,7 +628,7 @@ public class SwimmingClassManager {
             if (lesson.getTime().equals(chosenTime)) {
                 if (lesson.addLearner(learner.getName())) {
                     learner = Learner.getLearnerMap().get(learner);
-                    BookingDetails booking = new BookingDetails(learner.getId(), learner.getName(), lesson.getGrade(), extractDayFromLessonName(lesson.getName()), chosenTime,  selectedLesson.coach,"booked");
+                    BookingDetails booking = new BookingDetails(learner.getId(), learner.getName(), lesson.getGrade(), learner.getEmergencyContact(), learner.getAge(),extractDayFromLessonName(lesson.getName()), chosenTime,  selectedLesson.coach,"booked");
                     bookings.add(booking);
                     System.out.println("Booking successful! Your booking details:");
                     System.out.printf("Booking ID: %s - %s for Grade %d during %s on %s\n",
@@ -687,14 +689,14 @@ public class SwimmingClassManager {
         return false;
     }
 
-    public BookingDetails createBooking(int learnerId, String userName, int userGrade, String day, String timeSlot, String coachName) {
-        BookingDetails newBooking = new BookingDetails(learnerId, userName, userGrade, day, timeSlot,coachName,"booked");
+    public BookingDetails createBooking(int learnerId, String userName, int userGrade, int userNumber, int age, String day, String timeSlot, String coachName) {
+        BookingDetails newBooking = new BookingDetails(learnerId, userName, userGrade, userNumber, age, day, timeSlot,coachName,"booked");
         bookings.add(newBooking);
         return newBooking;
     }
 
     public void exampleBookingMethod() {
-        createBooking(1,"Test user", 3, "Monday", "4-5pm", "Ashwath");
+        createBooking(1,"Test user", 3, 988425678, 1, "Monday", "4-5pm", "Ashwath");
     }
 
     public List<SwimmingLesson> getLessonsByGrade(int grade) {

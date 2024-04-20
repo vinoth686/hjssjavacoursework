@@ -22,13 +22,17 @@ public class CoachReport {
                 .filter(r -> r.getReviewMonth() == month)
                 .collect(Collectors.groupingBy(ReviewDetails::getCoachName));
 
-        reviewsByCoach.forEach((coach, reviewsList) -> {
-            System.out.print(coach + " received ");
-            List<Integer> ratings = reviewsList.stream().map(ReviewDetails::getRating).collect(Collectors.toList());
-            String ratingsText = ratings.stream().map(String::valueOf).collect(Collectors.joining(", "));
-            double average = ratings.stream().mapToInt(Integer::intValue).average().orElse(0);
-            System.out.println(ratingsText + " then the average is " + (int)average + ".");
-        });
+        if (reviewsByCoach.isEmpty()) {
+            System.out.println("No data for Month " + month);
+        } else {
+            reviewsByCoach.forEach((coach, reviewsList) -> {
+                System.out.print(coach + " received ");
+                List<Integer> ratings = reviewsList.stream().map(ReviewDetails::getRating).collect(Collectors.toList());
+                String ratingsText = ratings.stream().map(String::valueOf).collect(Collectors.joining(", "));
+                double average = ratings.stream().mapToInt(Integer::intValue).average().orElse(0);
+                System.out.println(ratingsText + " then the average is " + (int)average + ".");
+            });
+        }
 
         finishInteraction();
     }

@@ -55,18 +55,25 @@ public class LearnerReport {
         if (sortedBookings.isEmpty()) {
             System.out.println("No bookings found for this month.");
         } else {
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-10s %-10s %-15s %-10s %-5s %-15s %-10s %-10s %-10s %-15s\n",
+                    "Booking ID", "Learner ID", "User Name", "User Grade", "Age", "Emergency Contact", "Day", "Time Slot", "Status", "Coach Name");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
             for (BookingDetails booking : sortedBookings) {
-                System.out.println("---------------------------------");
-                System.out.println("Booking ID: " + booking.getBookingId());
-                System.out.println("Learner ID: " + booking.getLearnerId());
-                System.out.println("User Name: " + booking.getUserName());
-                System.out.println("User Grade: " + booking.getUserGrade());
-                System.out.println("Day: " + booking.getDay());
-                System.out.println("Time Slot: " + booking.getTimeSlot());
-                System.out.println("Status: " + booking.getStatus());
-                System.out.println("Coach Name: " + booking.getCoachName());
-                System.out.println("---------------------------------");
+                System.out.printf("%-10d %-10d %-15s %-10d %-5d %-15s %-10s %-10s %-10s %-15s\n",
+                        booking.getBookingId(),
+                        booking.getLearnerId(),
+                        booking.getUserName(),
+                        booking.getUserGrade(),
+                        booking.getAge(),
+                        booking.getUserNumber(),
+                        booking.getDay(),
+                        booking.getTimeSlot(),
+                        booking.getStatus(),
+                        booking.getCoachName());
             }
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
         }
     }
+
 }

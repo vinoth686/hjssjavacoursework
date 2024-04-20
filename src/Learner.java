@@ -7,7 +7,7 @@ public class Learner {
     private final int age;
     private final char gender;
     private int grade;
-    private final int emergencyContact;
+    final int emergencyContact;
     public static Map<Integer, Learner> learnermap = new HashMap<Integer, Learner>();
 
     static {
@@ -31,6 +31,14 @@ public class Learner {
         return name;
     }
 
+    public int getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
     @Override
     public String toString() {
         return "ID: " + id + ", Name: " + name + ", Age: " + age + ", Gender: " + gender + ", Grade: " + grade
@@ -38,7 +46,7 @@ public class Learner {
     }
 
     public static void addStaticPreValues() {
-        Learner.addStaticLearner(1, "Stephen", 8, 'M', 3, 123456789);
+        Learner.addStaticLearner(1, "Stephen", 8, 'M', 3, 988425678);
         Learner.addStaticLearner(2, "Benny", 7, 'F', 2, 987654321);
         Learner.addStaticLearner(3, "Arshitha", 5, 'F', 1, 98876767);
     }
@@ -72,4 +80,5 @@ public class Learner {
     public int getId() {
         return id;
     }
+
 }

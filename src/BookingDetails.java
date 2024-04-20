@@ -6,6 +6,8 @@ public class BookingDetails {
     private final int bookingId;
     private final String userName;
     private final int userGrade;
+    private final int userNumber;
+    private final int age;
     private String day;
     private String timeSlot;
     private String status;
@@ -13,10 +15,13 @@ public class BookingDetails {
     private String coachName;
     private final int bookingMonth;
 
-    public BookingDetails(int learnerId, String userName, int userGrade, String day, String timeSlot, String coachName, String status) {
+
+    public BookingDetails(int learnerId, String userName, int userGrade, int userNumber,int age, String day, String timeSlot, String coachName, String status) {
         this.bookingId = nextBookingId++;
         this.userName = userName;
         this.userGrade = userGrade;
+        this.userNumber = userNumber;
+        this.age = age;
         this.day = day;
         this.timeSlot = timeSlot;
         this.learnerId = learnerId;
@@ -28,6 +33,14 @@ public class BookingDetails {
 
     public int getBookingMonth() {
         return bookingMonth;
+    }
+
+    public int getUserNumber() {
+        return userNumber;
+    }
+
+    public int getAge() {
+        return age;
     }
 
     public int getBookingId() {
@@ -94,4 +107,5 @@ public class BookingDetails {
     public int hashCode() {
         return Objects.hash(bookingId);
     }
+
 }
