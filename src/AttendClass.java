@@ -29,6 +29,15 @@ public class AttendClass {
                 return;
             }
 
+            Learner learner = Learner.getLearnerMap().get(booking.getLearnerId());
+            if (learner != null && booking.getUserGrade() > learner.getGrade()) {
+                if (booking.getUserGrade() <= 5) {
+                    System.out.println("Learner " + learner.getName() + " is being promoted from Grade " +
+                            learner.getGrade() + " to Grade " + booking.getUserGrade() + ".");
+                    learner.setGrade(booking.getUserGrade());
+                }
+            }
+
             System.out.println("Learner " + booking.getUserName() + " with Booking ID " + booking.getBookingId() +
                     " is now attending the swimming class for Grade " + booking.getUserGrade() +
                     " on " + booking.getDay() + " at " + booking.getTimeSlot() + " with coach " + booking.getCoachName());
@@ -36,13 +45,18 @@ public class AttendClass {
             System.out.println("Please add your review for the class:");
             String review = scanner.nextLine();
 
-            System.out.println("Please rate the class out of 5:");
-            int rating;
-            try {
-                rating = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid rating. Ratings must be numeric.");
-                return;
+            int rating = -1;
+            while (rating == -1) {
+                System.out.println("Please rate the class out of 5:");
+                try {
+                    rating = Integer.parseInt(scanner.nextLine());
+                    if (rating < 1 || rating > 5) {
+                        System.out.println("Invalid rating. Ratings must be numeric and between 1 to 5.");
+                        rating = -1;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid rating. Ratings must be numeric.");
+                }
             }
 
             Calendar now = Calendar.getInstance();
@@ -79,4 +93,3 @@ public class AttendClass {
         }
     }
 }
-

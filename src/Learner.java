@@ -6,7 +6,7 @@ public class Learner {
     private final String name;
     private final int age;
     private final char gender;
-    private final int grade;
+    private int grade;
     private final int emergencyContact;
     public static Map<Integer, Learner> learnermap = new HashMap<Integer, Learner>();
 
@@ -51,6 +51,14 @@ public class Learner {
     public static void addDynamicLearner(Learner newLearner) {
         int nextId = learnermap.size() + 1;
         learnermap.put(nextId, newLearner);
+    }
+
+    public void setGrade(int grade) {
+        if (grade > 5) {
+            this.grade = 5;
+        } else {
+            this.grade = grade;
+        }
     }
 
     public static Map<Integer, Learner> getLearnerMap() {

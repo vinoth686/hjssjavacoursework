@@ -444,8 +444,16 @@ public class SwimmingClassManager {
 //            System.out.println("Enter the coach's name to display their timetable:");
 //            String coachName = scanner.nextLine().trim();
 
-            System.out.println("Enter learner's ID:");
-            int learnerId = Integer.parseInt(scanner.nextLine().trim());
+            int learnerId = -1;
+            while (learnerId == -1) {
+                System.out.println("Enter learner's ID (numeric only):");
+                String input = scanner.nextLine().trim();
+                try {
+                    learnerId = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a numeric ID.");
+                }
+            }
             Learner learner = Learner.getLearnerMap().get(learnerId);
 
             if (learner == null) {
@@ -459,9 +467,18 @@ public class SwimmingClassManager {
             List<SwimmingLesson> lessons = getLessonsByCoachAndGrade(coachName, currentGrade, currentGrade + 1);
             if (lessons.isEmpty()) {
                 System.out.println("No available classes for Coach " + coachName + " that match your current or next grade level.");
-                System.out.println("Do you want to try another coach? (yes/no)");
-                if (!"yes".equalsIgnoreCase(scanner.nextLine().trim())) {
-                    break;
+                boolean validResponse = false;
+                while (!validResponse) {
+                    System.out.println("Do you want to try another coach? (yes/no)");
+                    String response = scanner.nextLine().trim().toLowerCase();
+                    if (response.equals("yes") || response.equals("no")) {
+                        validResponse = true;
+                        if (response.equals("no")) {
+                            continueBooking = false;
+                        }
+                    } else {
+                        System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    }
                 }
                 continue;
             }
@@ -518,7 +535,7 @@ public class SwimmingClassManager {
             String choice = scanner.nextLine().trim().toLowerCase();
             continueBooking = "yes".equals(choice);
             if (!continueBooking) {
-                System.out.println("hello");
+                System.out.println("Welcome to the main menu");
                 MainScreen timetableBookingInstance = new MainScreen();
                 timetableBookingInstance.showMenu();
             }
