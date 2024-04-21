@@ -208,7 +208,7 @@ public class SwimmingClassManager {
         return "Unknown Day";
     }
 
-    public void showByDay(String day) {
+    public void showByDay() {
         Map<Integer, Learner> learners = Learner.getLearnerMap();
         Scanner scanner = new Scanner(System.in);
         boolean continueBooking = true;
@@ -240,10 +240,17 @@ public class SwimmingClassManager {
                 }
 
                 System.out.println("Available slots on " + chosenDay + ":");
+                boolean slotsAvailable = false;
                 for (SwimmingLesson lesson : lessons) {
                     if (lesson.getGrade() == currentGrade || lesson.getGrade() == currentGrade + 1) {
                         lesson.displayAvailableSlots(chosenDay);
+                        slotsAvailable = true;
                     }
+                }
+
+                if (!slotsAvailable) {
+                    System.out.println("No available slots for your grade on " + chosenDay + ". Please choose another day.");
+                    continue;
                 }
 
                 System.out.println("Choose a time slot (e.g., '4-5pm'):");

@@ -51,9 +51,7 @@ public class TimetableBooking {
 
     private void showByDay() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the day to display timetable:");
-        String day = scanner.nextLine();
-        classManager.showByDay(day);
+        classManager.showByDay();
     }
 
     private void showByGradeLevel() {
@@ -67,8 +65,6 @@ public class TimetableBooking {
 
     private void showByCoach() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the coach's name to display their timetable:");
-        String coachName = scanner.nextLine().trim();
         classManager.showByCoach();
     }
 }
