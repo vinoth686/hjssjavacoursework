@@ -66,7 +66,9 @@ public class Registration {
 
         while (learnerAge < 4 || learnerAge > 11) {
             System.out.println("Invalid age. The proper age to enroll is 4 to 11, Sorry we can't proceed.");
-            System.exit(0);
+            MainScreen mainScreenInstance = new MainScreen();
+            mainScreenInstance.showMenu();
+            return;
         }
 
         char learnerGender;

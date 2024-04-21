@@ -193,11 +193,6 @@ public class SwimmingClassManager {
         }
     }
 
-//    private String extractDayFromLessonName(String lessonName) {
-//        String[] parts = lessonName.split(" ");
-//        return parts.length > 1 ? parts[1] : "Unknown Day";
-//    }
-
     private String extractDayFromLessonName(String lessonName) {
 
         Pattern p = Pattern.compile("\\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b");
