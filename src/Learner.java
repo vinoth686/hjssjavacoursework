@@ -49,6 +49,14 @@ public class Learner {
         Learner.addStaticLearner(1, "Stephen", 8, 'M', 3, 988425678);
         Learner.addStaticLearner(2, "Benny", 7, 'F', 2, 987654321);
         Learner.addStaticLearner(3, "Arshitha", 5, 'F', 1, 98876767);
+        Learner.addStaticLearner(4, "Plavio", 6, 'M', 3, 878729873);
+        Learner.addStaticLearner(5, "Rachel", 7, 'F', 2, 867839033);
+        Learner.addStaticLearner(6, "Abdullah", 9, 'M', 1, 988098763);
+        Learner.addStaticLearner(7, "Girish", 10, 'M', 4, 988435635);
+        Learner.addStaticLearner(8, "Raghul", 5, 'M', 5, 987654321);
+        Learner.addStaticLearner(9, "Tamil", 7, 'F', 5, 98876767);
+        Learner.addStaticLearner(10, "Indu", 8, 'F', 4, 988674567);
+        Learner.addStaticLearner(11, "Kirana", 12, 'F', 4, 988765678);
     }
 
     public static void addStaticLearner(int id, String name, int age, char gender, int grade, int phoneNumber) {

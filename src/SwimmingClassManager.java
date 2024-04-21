@@ -223,11 +223,16 @@ public class SwimmingClassManager {
                 continue;
             }
 
+            if (learner.getAge() > 11) {
+                System.out.println("Sorry, you can't book a class. The maximum age limit is 11.");
+                continue;
+            }
+
             int currentGrade = learner.getGrade();
             System.out.println("Hello " + learner.getName() + ", you are currently in grade " + currentGrade + ".");
 
             while (true) {
-                System.out.println("Available classes for Grade " + currentGrade + " and Grade " + (currentGrade + 1) + ":");
+                System.out.println("Available classes");
                 displayClassesForGrades(currentGrade, currentGrade + 1);
 
                 System.out.println("Choose a day for your class (e.g., 'Monday'):");
@@ -278,7 +283,7 @@ public class SwimmingClassManager {
                     System.out.printf("Booking ID: %s - %s for Grade %d on %s during %s in month %d\n",
                             booking.getBookingId(), booking.getUserName(), booking.getUserGrade(),
                             booking.getDay(), booking.getTimeSlot(), booking.getBookingMonth());
-//                    System.out.println("Learner ID: " + booking.getLearnerId());
+                    System.out.println("List of Bookings");
                     for (BookingDetails booked : bookings) {
                         System.out.println("Booking ID: " + booked.getBookingId());
                         System.out.println("User: " + booked.getUserName());
@@ -353,6 +358,11 @@ public class SwimmingClassManager {
 
             if (learner == null) {
                 System.out.println("Invalid learner ID. Please try again.");
+                continue;
+            }
+
+            if (learner.getAge() > 11) {
+                System.out.println("Sorry, you can't book a class. The maximum age limit is 11.");
                 continue;
             }
 
@@ -467,6 +477,11 @@ public class SwimmingClassManager {
 
             if (learner == null) {
                 System.out.println("Invalid learner ID. Please try again.");
+                continue;
+            }
+
+            if (learner.getAge() > 11) {
+                System.out.println("Sorry, you can't book a class. The maximum age limit is 11.");
                 continue;
             }
 

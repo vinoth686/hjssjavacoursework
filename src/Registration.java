@@ -67,14 +67,19 @@ public class Registration {
         while (learnerAge < 4 || learnerAge > 11) {
             System.out.println("Invalid age. The proper age to enroll is 4 to 11, Sorry we can't proceed.");
             System.exit(0);
-            // MainScreen timetableBookingInstance = new MainScreen();
-            // timetableBookingInstance.showMenu();
-            // birthdate = getValidBirthdate(scanner);
-            // age = calculateAge(birthdate, currentDate);
         }
 
-        System.out.println("Enter the gender of the learner (M/F):");
-        char learnerGender = scanner.nextLine().charAt(0);
+        char learnerGender;
+        while (true) {
+            System.out.println("Enter the gender of the learner (M/F):");
+            String genderInput = scanner.nextLine().toUpperCase();
+            if (genderInput.equals("M") || genderInput.equals("F")) {
+                learnerGender = genderInput.charAt(0);
+                break;
+            } else {
+                System.out.println("Invalid gender. Please enter 'M' for Male or 'F' for Female.");
+            }
+        }
 
         System.out.println("Enter the grade");
         int learnerGrade = -1;
@@ -86,10 +91,10 @@ public class Registration {
                 if (learnerGrade >= 0 && learnerGrade <= 5) {
                     isValidInput = true;
                 } else {
-                    System.out.println("Invalid grade. Please enter a grade between 0 and 4.");
+                    System.out.println("Invalid grade. Please enter a grade between 0 and 5.");
                 }
             } else {
-                System.out.println("Invalid input. Please enter a valid integer grade between 0 and 4.");
+                System.out.println("Invalid input. Please enter a valid integer grade between 0 and 5.");
                 scanner.next();
             }
         }
