@@ -27,7 +27,6 @@ public class RegistrationTest {
     public void testRegisterNewLearner() {
         try {
             Registration registration = new Registration();
-            // Over-provide input to cover unexpected additional input requests
             String input = "John\n2015-01-01\nM\n3\n9876543210\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n";
             provideInput(input);
 
