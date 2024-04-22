@@ -190,9 +190,25 @@ public class SwimmingClassManager {
         boolean continueBooking = true;
 
         while (continueBooking) {
-            System.out.println("Enter learner's ID:");
-            int learnerId = Integer.parseInt(scanner.nextLine().trim());
-            Learner learner = learners.get(learnerId);
+//            System.out.println("Enter learner's ID:");
+//            int learnerId = Integer.parseInt(scanner.nextLine().trim());
+//            Learner learner = learners.get(learnerId);
+
+            int learnerId = -1;
+            Learner learner = null;
+            while (learner == null) {
+                System.out.println("Enter learner's ID (numeric only):");
+                String input = scanner.nextLine().trim();
+                try {
+                    learnerId = Integer.parseInt(input);
+                    learner = learners.get(learnerId);
+                    if (learner == null) {
+                        System.out.println("No learner found with this ID. Please try again.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a numeric ID.");
+                }
+            }
 
             if (learner == null) {
                 System.out.println("Invalid learner ID. Please try again.");
