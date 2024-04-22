@@ -21,12 +21,12 @@ public class MainScreen {
                 System.out.println("4. Monthly coach report");
                 System.out.println("5. Register a new learner");
                 System.out.println("6. Change/Cancel a booking");
-
+                System.out.println("7. Exit");
                 mainOptionChoice = scanner.nextInt();
                 scanner.nextLine();
 
-                if (mainOptionChoice < 1 || mainOptionChoice > 6) {
-                    System.out.println("Invalid choice. Please select a valid option between 1 and 6.");
+                if (mainOptionChoice < 1 || mainOptionChoice > 7) {
+                    System.out.println("Invalid choice. Please select a valid option between 1 and 7.");
                 } else {
                     validChoice = true;
                 }
@@ -64,6 +64,9 @@ public class MainScreen {
                 ChangeOrCancelBooking changeOrCancelBookingInstance = new ChangeOrCancelBooking(classManager);
                 changeOrCancelBookingInstance.modifyBooking();
                 break;
+            case 7:
+                System.out.println("Exiting Program, Bubyee");
+                System.exit(0);
             default:
                 System.out.println("Unexpected error.");
         }
