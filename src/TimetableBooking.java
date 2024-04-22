@@ -56,9 +56,23 @@ public class TimetableBooking {
 
     private void showByGradeLevel() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the grade level to display timetable:");
-        int grade = scanner.nextInt();
-        scanner.nextLine();
+        int grade = 0;
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.println("Enter the grade level to display timetable:");
+            try {
+                grade = scanner.nextInt();
+                scanner.nextLine();
+                if (grade >= 1 && grade <= 5) {
+                    validInput = true;
+                } else {
+                    System.out.println("Please enter a valid grade level (1-5).");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a numeric grade level.");
+                scanner.nextLine();
+            }
+        }
         classManager.showByGrade(grade);
     }
 

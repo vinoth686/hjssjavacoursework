@@ -344,8 +344,21 @@ public class SwimmingClassManager {
         boolean continueBooking = true;
 
         while (continueBooking) {
+
             System.out.println("Enter learner's ID:");
-            int learnerId = Integer.parseInt(scanner.nextLine().trim());
+            int learnerId = -1;
+
+            while (learnerId == -1) {
+                try {
+                    learnerId = Integer.parseInt(scanner.nextLine().trim());
+                    if (!learners.containsKey(learnerId)) {
+                        System.out.println("Invalid learner ID. Please try again.");
+                        learnerId = -1;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a numeric ID.");
+                }
+            }
             Learner learner = learners.get(learnerId);
 
             if (learner == null) {
